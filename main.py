@@ -78,8 +78,6 @@ def saveConversations(query, result, session, userid, intent):
 
         intentConvo.set(user_conversation)
 
-    # print(result)
-    # print(session)
 
 
 def processRequest(req):
@@ -87,21 +85,17 @@ def processRequest(req):
     query_response = req.get("queryResult")
     intent = query_response.get("intent").get("displayName")
     intentList.append(intent)
-    # print("The intent list is below")
     print(intentList)
-    # print(query_response)
     res = ''
     query = query_response.get('queryText')
     result = query_response.get("fulfillmentText")
     session = query_response.get("outputContexts")[0].get("name").split("/")[-3]
 
     if intent == 'MedimateWelcomeIntent':
-        # print("HIiii")
         saveConversations(query, result, session, userID[-1], intent)
         res = result
 
     elif intent == 'finddoctors':
-        # print("HIiii")
         specialization.clear()
         checkListDocID.clear()
         language = ''
@@ -122,7 +116,6 @@ def processRequest(req):
                 "Exit❌"
             ]
             res = createResponseForAdditionalInfo(getDoctors, quickReplies)
-        # return res
 
     elif intent == 'doctorInfo':
         docID.append(query)
@@ -170,21 +163,9 @@ def processRequest(req):
     elif intent == 'New User - yes':
         res = newUserDetails(req, session)
         saveConversations(query, result, session, userID[-1], intent)
-        # saveConversations(query, result, session, userID[-1])
-        print("i am coming till here :p")
-        # res = createCommonResponse(newUser)
         print(res)
-        # return res
 
-    # elif intent == 'New User - no':
-    #     existingUser = existingUserDetail(req)
-    #     # if existingUser == '':
-    #     #     existingUser = 'Looks like you are not registered'
-    #     #     res = createResponse(existingUser)
-    #     # else:
-    #     #     res = createFollowUpResponse(existingUser)
-    #
-    #     return res
+
 
     elif intent == 'getUserId':
         # print('in here')
@@ -281,34 +262,7 @@ def createResponse(fulfilment_text):
     return {
         "fulfillmentText": fulfilment_text
     }
-    # webhookresponse = fulfilment_text
-    # return {
-    #     "fulfillmentText": fulfilment_text,
-    #     "fulfillmentMessages": [
-    #         {
-    #             "text": {
-    #                 "text": [
-    #                     webhookresponse,
-    #                     "I provide the following services a>	Based on your symptoms, I can find a doctor for you "
-    #                     "nearby,b>	I can provide emergency contacts for you c>	I can provide Pharmacy emergency "
-    #                     "contacts d>  Follow-up of previous doctor's appointments "
-    #                 ]
-    #
-    #             }
-    #         },
-    #         {
-    #             "text": {
-    #                 "text": [
-    #                     "I provide the following services a>	Based on your symptoms, I can find a doctor for you "
-    #                     "nearby,b>	I can provide emergency contacts for you c>	I can provide Pharmacy emergency "
-    #                     "contacts d>  Follow-up of previous doctor's appointments "
-    #                 ]
-    #             }
-    #         },
-    #         {"payload": {"rawPayload": "true", "sendAsMessage": "true"}}
-    #     ]
-    # }
-    #
+
 
 
 def createCommonResponse(fulfilment_text, quickReplies, textForQuickReplies):
@@ -332,28 +286,7 @@ def createCommonResponse(fulfilment_text, quickReplies, textForQuickReplies):
     return fulfillmentMessages
 
 
-# def createResponseForOldUser(fulfilment_text):
-#     fulfillmentMessages = {
-#         "fulfillmentMessages": [{
-#             "text": {
-#                 "text": [
-#                     fulfilment_text
-#                 ]
-#             },
-#             "platform": "TELEGRAM"
-#         },
-#             {
-#                 "quickReplies": {
-#                     "title": "Please choose any option 👇",
-#                     "quickReplies": [
-#                         "Notes",
-#                         "Go to services menu"
-#                     ]
-#                 },
-#                 "platform": "TELEGRAM"
-#             }]
-#     }
-#     return fulfillmentMessages
+
 
 
 def createFollowUpResponse(fulfilment_text, Event):
@@ -363,32 +296,9 @@ def createFollowUpResponse(fulfilment_text, Event):
             "name": Event,
         }
     }
-    # print(serviceIntentCall)
+
     return serviceIntentCall
-    # webhookresponse = fulfilment_text
-    # return {
-    #     "fulfillmentText": fulfilment_text,
-    #     "fulfillmentMessages": [
-    #         {
-    #             "text": {
-    #                 "text": [
-    #                     webhookresponse
-    #                 ]
-    #
-    #             }
-    #         },
-    #         {
-    #             "text": {
-    #                 "text": [
-    #                     "I provide the following services a>	Based on your symptoms, I can find a doctor for you "
-    #                     "nearby,b>	I can provide emergency contacts for youc>	I can provide Pharmacy emergency "
-    #                     "contacts d>  Follow-up of previous doctor's appointments "
-    #                 ]
-    #             }
-    #         },
-    #         {"payload": {"rawPayload": "true", "sendAsMessage": "true"}}
-    #     ]
-    # }
+
 
 
 def createResponseForAdditionalInfo(fulfilment_text, quickReplies):
@@ -479,11 +389,6 @@ def newUserDetails(req, session):
                   'in ' + '\n(Sorry 🤕, but only these languages are available for now ➡️  English, German , ' \
                           'French , Spanish or Italian) '
 
-        # quickReplies = [
-        #     "Find Doctor 🔍",
-        #     "Emergency Room Contact 🚨",
-        #     "Pharmacy Contact 💊"
-        # ]
         textForQuickReplies = 'Please choose any of the below options 👇'
         quickReplies = [
             "It's fine",
@@ -499,13 +404,7 @@ def newUserDetails(req, session):
             "Existing User",
         ]
         res = createCommonResponse(message, quickReplies, textForQuickReplies)
-    # docs = db.collection('Users').where('UserEmail', '==', userEmail).stream()
-    # if userEmail in docs:
-    #     for doc in docs:
-    #         user = doc.to_dict()
-    #         user_Id = user['userID']
-    #     message = 'Looks like you are already registered with us, Your User Id is ' + user_Id
-    #     return message
+
 
     return res
 
@@ -662,20 +561,6 @@ def fetchPreviousConversation(userId):
     else:
         return "You had no prior appointments.\n", False, False
 
-    # if docs is not None:
-
-    # else:
-    #     message = ''
-
-    #
-    # user = doc.to_dict()
-    # print(user)
-    # previous_convo = user['conversation']
-    # # for convo in previous_convo:
-    # #     if convo['intent' == 'finddoctors']:
-    # #         previousReply = convo['reply']
-    #
-    # # print(user_name)
 
 
 def checkUserExistence(userId):
@@ -699,7 +584,6 @@ def getListofDoctors(req, language):
     noDoctorFlag = ""
 
     parameters = req['queryResult']['parameters']
-    # print('Dialogflow parameters:')
     specialization = str(parameters.get('doctorspecialization'))
     language = language.lower()
     print(language)
